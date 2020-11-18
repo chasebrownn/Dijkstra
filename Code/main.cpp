@@ -27,20 +27,24 @@ using namespace std;
 
 typedef struct edge_entry {
 	int weight;
-	Node* pointer;
+	struct node_entry* pointer;
+	struct edge_entry* next;
 
 } Edge;
 
 typedef struct node_entry {
-	linkedlist* edge_list;
+	struct linkedlist_entry* edge_list;
 
 } Node;
 
 typedef struct linkedlist_entry {
-	Edge* data;	
-	linkedlist* next;
+	struct edge_entry* data;
+	struct linkedlist_entry* next;
 
-} linkedlist;
+} Linkedlist;
+
+void insert_edges(Linkedlist*, int);
+void print_list(Linkedlist*, int);
 
 int main(int argc, char** args) //int argc, char** args
 {
@@ -53,16 +57,126 @@ int main(int argc, char** args) //int argc, char** args
 	cin >> num_of_edges; // Take m number of edges
 	m = stoi(num_of_edges);
 
-	//cout << n << " " << m << endl;
+	cout << n << " " << m << endl;
 
-	Node* vertices = new Node[n];
+	//Node* vertices = new Node[n];
+
+	Linkedlist* edges = new Linkedlist;
+	Linkedlist* temp = edges;
+
+	for (int i = 0; i < m; i++)
+	{
+		if (temp == NULL)
+		{
+			temp = new Linkedlist;
+		}
+		temp->data = NULL;
+		temp = temp->next;
+	}
+
+	insert_edges(edges, m);
+	//cout << "Seg Fault?" << endl;
+	print_list(edges, m);
 
 
-
-	delete vertices;
+	//delete[] vertices;
+	//delete[] edges;
 }
 
-void insert_edge()
+void insert_edges(Linkedlist* edges, int max_edges)
+{
+	string u_str, v_str, w_str;
+	int u, v, w;
+
+	for (int i = 0; i < max_edges; i++)
+	{
+		cin >> u_str;
+		cin >> v_str;
+		cin >> w_str;
+		cin.ignore(100, '\n');
+
+		u = stoi(u_str); // 6
+		v = stoi(v_str); // 11
+		w = stoi(w_str);
+
+		cout << u << " " << v << " " << w << " " << endl;
+
+		Linkedlist* u_pointer = edges;
+		Linkedlist* v_pointer = edges;
+		
+		for (int j = 1; j < u; j++)
+		{
+			if (u_pointer == NULL)
+			{
+				u_pointer = new Linkedlist;
+			}
+			u_pointer = u_pointer->next;
+		}
+		for (int x = 1; x < v; x++)
+		{
+			if (v_pointer == NULL)
+			{
+				v_pointer = new Linkedlist;
+			}
+			v_pointer = v_pointer->next;
+		}
+
+		cout << "Here?" << endl; // Does not reach here after pass 1
+
+		Edge* data_pointer = u_pointer->data;
+
+		if (data_pointer == NULL)
+		{
+			cout << "If-statement" << endl;
+			data_pointer = new Edge();
+			data_pointer->pointer = new Node();
+			data_pointer->pointer->edge_list = v_pointer;
+			data_pointer->weight = w;
+		}
+		else
+		{
+			cout << "While-loop" << endl;
+			while (data_pointer != NULL)
+			{
+				data_pointer = data_pointer->next;
+			}
+			data_pointer = new Edge();
+			data_pointer->pointer = new Node();
+			data_pointer->pointer->edge_list = v_pointer;
+			data_pointer->weight = w;
+		}
+
+		//delete[] temp_pointer;
+		//delete[] v_pointer;
+		//delete[] data_pointer;
+		
+	}
+	
+}
+
+void print_list(Linkedlist* edges, int max_edges)
+{
+	Linkedlist* node_ptr = edges;
+	int node = 1;
+
+	while (node_ptr->next != NULL)
+	{
+		cout << "(u) Node: " << node << endl;
+
+		Edge* data_ptr = node_ptr->data;
+
+		while (data_ptr->next != NULL)
+		{
+			cout << "\t" << "(w) Weight: " << data_ptr->weight << endl;
+			// Print v
+
+			data_ptr->next;
+		}
+
+		node++;
+		node_ptr->next;
+	}
+}
 
 /*void insert_hash(int position, hash_table** hash, char* app_name, tree* app_node) // Inserts app into the hash table
 {
