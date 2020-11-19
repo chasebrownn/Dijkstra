@@ -32,10 +32,12 @@ typedef struct edge_entry {
 
 } Edge;
 
+
 typedef struct node_entry {
 	struct linkedlist_entry* edge_list;
 
 } Node;
+
 
 typedef struct linkedlist_entry {
 	struct edge_entry* data;
@@ -43,8 +45,10 @@ typedef struct linkedlist_entry {
 
 } Linkedlist;
 
+
 void insert_edges(Linkedlist*, int);
 void print_list(Linkedlist*, int);
+
 
 int main(int argc, char** args) //int argc, char** args
 {
@@ -62,22 +66,27 @@ int main(int argc, char** args) //int argc, char** args
 	//Node* vertices = new Node[n];
 
 	Linkedlist* edges = new Linkedlist;
-	Linkedlist* temp = edges;
+	edges->next = NULL;
+	edges->data = NULL;
+	Linkedlist* previous = edges;
+	Linkedlist* temp = previous->next;
 
-	for (int i = 0; i < m; i++)
+	for (int i = 1; i < m; i++)
 	{
 		if (temp == NULL)
 		{
 			temp = new Linkedlist;
+			temp->next = NULL;
 		}
 		temp->data = NULL;
+		previous->next = temp;
+		previous = previous->next;
 		temp = temp->next;
 	}
 
 	insert_edges(edges, m);
 	//cout << "Seg Fault?" << endl;
-	print_list(edges, m);
-
+	//print_list(edges, m);
 
 	//delete[] vertices;
 	//delete[] edges;
@@ -106,28 +115,26 @@ void insert_edges(Linkedlist* edges, int max_edges)
 		
 		for (int j = 1; j < u; j++)
 		{
-			if (u_pointer == NULL)
+			/*if (u_pointer == NULL)
 			{
 				u_pointer = new Linkedlist;
-			}
+			}*/
 			u_pointer = u_pointer->next;
 		}
 		for (int x = 1; x < v; x++)
 		{
-			if (v_pointer == NULL)
+			/*if (v_pointer == NULL)
 			{
 				v_pointer = new Linkedlist;
-			}
+			}*/
 			v_pointer = v_pointer->next;
 		}
-
-		cout << "Here?" << endl; // Does not reach here after pass 1
 
 		Edge* data_pointer = u_pointer->data;
 
 		if (data_pointer == NULL)
 		{
-			cout << "If-statement" << endl;
+			//cout << "If-statement" << endl;
 			data_pointer = new Edge();
 			data_pointer->pointer = new Node();
 			data_pointer->pointer->edge_list = v_pointer;
@@ -135,7 +142,7 @@ void insert_edges(Linkedlist* edges, int max_edges)
 		}
 		else
 		{
-			cout << "While-loop" << endl;
+			//cout << "While-loop" << endl;
 			while (data_pointer != NULL)
 			{
 				data_pointer = data_pointer->next;
@@ -163,15 +170,21 @@ void print_list(Linkedlist* edges, int max_edges)
 	{
 		cout << "(u) Node: " << node << endl;
 
+		//cout << "Seg Fault" << endl;
+
 		Edge* data_ptr = node_ptr->data;
 
-		while (data_ptr->next != NULL)
+		//cout << "Seg Fault 2" << endl;
+
+		/*while (data_ptr->next != NULL)
 		{
+			cout << "Seg Fault 3" << endl;
+
 			cout << "\t" << "(w) Weight: " << data_ptr->weight << endl;
 			// Print v
 
 			data_ptr->next;
-		}
+		}*/
 
 		node++;
 		node_ptr->next;
