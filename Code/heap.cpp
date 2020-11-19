@@ -27,6 +27,7 @@ void do_this(int n)
 	or equal to x’s current key value
 */
 
+/*
 void min_heapify(int Arr[], int i, int n)
 {
 	int left = 2 * 1;
@@ -89,4 +90,4 @@ void insert(int Arr[], int x)
 	length = length + 1;
 	Arr[length] = -1;
 	decrease_key(Arr, length, x);
-}
+}*/

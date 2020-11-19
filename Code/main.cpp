@@ -30,24 +30,25 @@ typedef struct edge_entry {
 	struct node_entry* pointer;
 	struct edge_entry* next;
 
-} Edge;
+} edge_list;
 
 
 typedef struct node_entry {
-	struct linkedlist_entry* edge_list;
+	struct edge_entry* edge_list;
 
-} Node;
+} node_table;
 
-
+/*
 typedef struct linkedlist_entry {
 	struct edge_entry* data;
 	struct linkedlist_entry* next;
 
-} Linkedlist;
+} Linkedlist;*/
 
 
-void insert_edges(Linkedlist*, int);
-void print_list(Linkedlist*, int);
+void get_edges(node_table**, int);
+void insert_edge(node_table** nodes, int u, int v, int w);
+void print_list(node_table** nodes, int max_edges);
 
 
 int main(int argc, char** args) //int argc, char** args
@@ -63,8 +64,15 @@ int main(int argc, char** args) //int argc, char** args
 
 	cout << n << " " << m << endl;
 
-	//Node* vertices = new Node[n];
+	node_table** vertices = new node_table*[n+1];
 
+	for (int i = 0; i <= n; i++)
+	{
+		vertices[i] = new node_table();
+		vertices[i]->edge_list = NULL;
+	}
+
+	/*
 	Linkedlist* edges = new Linkedlist;
 	edges->next = NULL;
 	edges->data = NULL;
@@ -82,17 +90,18 @@ int main(int argc, char** args) //int argc, char** args
 		previous->next = temp;
 		previous = previous->next;
 		temp = temp->next;
-	}
+	}*/
 
-	insert_edges(edges, m);
-	//cout << "Seg Fault?" << endl;
-	//print_list(edges, m);
+	get_edges(vertices, m);
+	print_list(vertices, n);
+
+
 
 	//delete[] vertices;
 	//delete[] edges;
 }
 
-void insert_edges(Linkedlist* edges, int max_edges)
+void get_edges(node_table** nodes, int max_edges)
 {
 	string u_str, v_str, w_str;
 	int u, v, w;
@@ -104,29 +113,32 @@ void insert_edges(Linkedlist* edges, int max_edges)
 		cin >> w_str;
 		cin.ignore(100, '\n');
 
-		u = stoi(u_str); // 6
-		v = stoi(v_str); // 11
+		u = stoi(u_str); 
+		v = stoi(v_str); 
 		w = stoi(w_str);
 
-		cout << u << " " << v << " " << w << " " << endl;
+		cout << u << " " << v << " " << w << endl;
 
-		Linkedlist* u_pointer = edges;
+		insert_edge(nodes, u, v, w);
+		
+
+		/*Linkedlist* u_pointer = edges;
 		Linkedlist* v_pointer = edges;
 		
 		for (int j = 1; j < u; j++)
 		{
-			/*if (u_pointer == NULL)
+			if (u_pointer == NULL)
 			{
 				u_pointer = new Linkedlist;
-			}*/
+			}
 			u_pointer = u_pointer->next;
 		}
 		for (int x = 1; x < v; x++)
 		{
-			/*if (v_pointer == NULL)
+			if (v_pointer == NULL)
 			{
 				v_pointer = new Linkedlist;
-			}*/
+			}
 			v_pointer = v_pointer->next;
 		}
 
@@ -151,7 +163,7 @@ void insert_edges(Linkedlist* edges, int max_edges)
 			data_pointer->pointer = new Node();
 			data_pointer->pointer->edge_list = v_pointer;
 			data_pointer->weight = w;
-		}
+		}*/
 
 		//delete[] temp_pointer;
 		//delete[] v_pointer;
@@ -161,33 +173,56 @@ void insert_edges(Linkedlist* edges, int max_edges)
 	
 }
 
-void print_list(Linkedlist* edges, int max_edges)
+void insert_edge(node_table** nodes, int u, int v, int w)
 {
-	Linkedlist* node_ptr = edges;
-	int node = 1;
+	node_table* u_pointer = (nodes[u]);
+	node_table* v_pointer = (nodes[v]);
+	edge_list* edge_pointer = u_pointer->edge_list;
 
-	while (node_ptr->next != NULL)
+	if (edge_pointer == NULL)
+	{		
+		edge_list* new_entry = new edge_list();
+
+		u_pointer->edge_list = new_entry;
+		new_entry->pointer = v_pointer;
+		new_entry->weight = w;
+		new_entry->next = NULL;
+
+		return;
+	}
+	else
 	{
-		cout << "(u) Node: " << node << endl;
-
-		//cout << "Seg Fault" << endl;
-
-		Edge* data_ptr = node_ptr->data;
-
-		//cout << "Seg Fault 2" << endl;
-
-		/*while (data_ptr->next != NULL)
+		while (edge_pointer->next != NULL)
 		{
-			cout << "Seg Fault 3" << endl;
+			edge_pointer = edge_pointer->next;
+		}
 
-			cout << "\t" << "(w) Weight: " << data_ptr->weight << endl;
-			// Print v
+		edge_list* new_entry = new edge_list();
 
-			data_ptr->next;
-		}*/
+		edge_pointer->next = new_entry;
+		new_entry->pointer = v_pointer;
+		new_entry->weight = w;
+		new_entry->next = NULL;
+	}
+		
+}
 
-		node++;
-		node_ptr->next;
+
+void print_list(node_table** nodes, int max_edges)
+{
+	for (int i = 1; i <= 25; i++)
+	{
+		edge_list* temp = (nodes[i]->edge_list);
+
+		while (temp != NULL)
+		{
+			if (temp != NULL)
+			{
+				cout << "Weight of node[" << i << "]'s edge is: " << temp->weight << endl;
+				//temp = temp->next;
+			}
+			temp = temp->next;
+		}
 	}
 }
 
