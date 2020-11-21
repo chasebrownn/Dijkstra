@@ -64,9 +64,11 @@ int main(int argc, char** args) //int argc, char** args
 
 	cout << n << " " << m << endl;
 
-	node_table** vertices = new node_table*[n+1];
+	int size = n + 1;
 
-	for (int i = 0; i <= n; i++)
+	node_table** vertices = new node_table*[size];
+
+	for (int i = 0; i <= n; i++) // type mismatch
 	{
 		vertices[i] = new node_table();
 		vertices[i]->edge_list = NULL;
@@ -122,53 +124,7 @@ void get_edges(node_table** nodes, int max_edges)
 		insert_edge(nodes, u, v, w);
 		
 
-		/*Linkedlist* u_pointer = edges;
-		Linkedlist* v_pointer = edges;
-		
-		for (int j = 1; j < u; j++)
-		{
-			if (u_pointer == NULL)
-			{
-				u_pointer = new Linkedlist;
-			}
-			u_pointer = u_pointer->next;
-		}
-		for (int x = 1; x < v; x++)
-		{
-			if (v_pointer == NULL)
-			{
-				v_pointer = new Linkedlist;
-			}
-			v_pointer = v_pointer->next;
-		}
 
-		Edge* data_pointer = u_pointer->data;
-
-		if (data_pointer == NULL)
-		{
-			//cout << "If-statement" << endl;
-			data_pointer = new Edge();
-			data_pointer->pointer = new Node();
-			data_pointer->pointer->edge_list = v_pointer;
-			data_pointer->weight = w;
-		}
-		else
-		{
-			//cout << "While-loop" << endl;
-			while (data_pointer != NULL)
-			{
-				data_pointer = data_pointer->next;
-			}
-			data_pointer = new Edge();
-			data_pointer->pointer = new Node();
-			data_pointer->pointer->edge_list = v_pointer;
-			data_pointer->weight = w;
-		}*/
-
-		//delete[] temp_pointer;
-		//delete[] v_pointer;
-		//delete[] data_pointer;
-		
 	}
 	
 }
