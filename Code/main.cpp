@@ -34,9 +34,22 @@ typedef struct edge_entry {
 
 
 typedef struct node_entry {
+	int node_position;
 	struct edge_entry* edge_list;
 
 } node_table;
+
+
+typedef struct min_heap {
+	struct node_entry* previous_node;
+	struct node_entry* current_node;
+	int distance;
+
+	struct min_heap* left;
+	struct min_heap* right;
+
+} min_heap;
+
 
 /*
 typedef struct linkedlist_entry {
@@ -48,6 +61,7 @@ typedef struct linkedlist_entry {
 
 void get_edges(node_table**, int);
 void insert_edge(node_table** nodes, int u, int v, int w);
+void get_commands();
 void print_list(node_table** nodes, int max_edges);
 
 
@@ -67,11 +81,14 @@ int main(int argc, char** args) //int argc, char** args
 	int size = n + 1;
 
 	node_table** vertices = new node_table*[size];
+	//min_heap* tree = new min_heap[size];
+	
 
 	for (int i = 0; i <= n; i++) // type mismatch
 	{
 		vertices[i] = new node_table();
 		vertices[i]->edge_list = NULL;
+		vertices[i]->node_position = 0;
 	}
 
 	/*
@@ -96,8 +113,9 @@ int main(int argc, char** args) //int argc, char** args
 
 	get_edges(vertices, m);
 	print_list(vertices, n);
+	get_commands();
 
-
+	//Stop, write, find
 
 	//delete[] vertices;
 	//delete[] edges;
@@ -122,9 +140,6 @@ void get_edges(node_table** nodes, int max_edges)
 		cout << u << " " << v << " " << w << endl;
 
 		insert_edge(nodes, u, v, w);
-		
-
-
 	}
 	
 }
@@ -139,6 +154,7 @@ void insert_edge(node_table** nodes, int u, int v, int w)
 	{		
 		edge_list* new_entry = new edge_list();
 
+		u_pointer->node_position = u;				
 		u_pointer->edge_list = new_entry;
 		new_entry->pointer = v_pointer;
 		new_entry->weight = w;
@@ -163,6 +179,80 @@ void insert_edge(node_table** nodes, int u, int v, int w)
 		
 }
 
+void get_commands()
+{
+	string line, s_str, t_str, flag_str;
+	int s, t, flag;
+	cin >> line;
+
+	while (line != "stop")
+	{
+		if (line == "write")
+		{
+			/*  
+				On reading write, your program must write the graph to stdout. The output format of the
+				write command is as follows: The first line should contain two integers, n and m, where n is the
+				number of vertices and m is the number of edges in the graph, respectively. This line must be followed
+				by n lines, one for each vertex. If vertex u has k neighbours (u, vi) with weight wi, 1 ≤ i ≤ k, then for each vertex u, output:\
+
+				u : (v1; w1); (v2; w2); . . . ; (vk; wk)
+			*/
+
+			cout << "Write..." << endl;
+		}
+		else if (line == "find")
+		{
+			/*
+				find s t flag, where flag is either zero or one.
+				On reading find s t 1, your program runs Dijkstra’s shortest path algorithm to compute the shortest
+				path from s to t, and prints out the length of this shortest path to stdout. The information output
+				format is:
+				LENGTH: l (where l is the shortest path length)
+
+				On reading find s t 0, your program runs Dijkstra’s shortest path algorithm to compute a shortest
+				path from s to t, and prints the actual path (sequence of vertices) to stdout. The information output
+				format is:
+				PATH:s; v1; v2; . . . ; vk;t
+				where the sequence of vertices listed corresponds to the shortest path (s, v1); (v1, v2). . .(vk, t) computed
+				of length k.
+				While your program reads in only one graph, it may be asked to compute s-t shortest paths for many
+				different source-destination pairs s and t. Therefore, during the computation of the s-t shortest path, your
+				program must not modify the given graph.
+			*/
+
+			cout << "Find..." << endl;
+
+			cin >> s_str;
+			cin >> t_str;
+			cin >> flag_str;
+
+			s = stoi(s_str);
+			t = stoi(t_str);
+			flag = stoi(flag_str);
+
+			if (flag == 1)
+			{
+
+			}
+			else if (flag == 0)
+			{
+
+			}
+			else
+			{
+				cout << flag << " is not a valid flag" << endl;
+			}
+		}
+		else
+		{
+			cout << line << " is not a valid command inquiry" << endl;
+		}
+		cin >> line;
+	}
+
+	return;
+}
+
 
 void print_list(node_table** nodes, int max_edges)
 {
@@ -173,9 +263,8 @@ void print_list(node_table** nodes, int max_edges)
 		while (temp != NULL)
 		{
 			if (temp != NULL)
-			{
-				cout << "Weight of node[" << i << "]'s edge is: " << temp->weight << endl;
-				//temp = temp->next;
+			{			
+				cout << "Weight of node[" << i << "]'s edge is: " << temp->weight << endl;				
 			}
 			temp = temp->next;
 		}
