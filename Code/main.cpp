@@ -25,39 +25,6 @@ using namespace std;
 	are indexed from 1 to n (and not from 0 to n − 1).
 */
 
-typedef struct edge_entry {
-	int weight;
-	struct node_entry* pointer;
-	struct edge_entry* next;
-
-} edge_list;
-
-
-typedef struct node_entry {
-	int node_position;
-	struct edge_entry* edge_list;
-
-} node_table;
-
-
-typedef struct min_heap {
-	struct node_entry* previous_node;
-	struct node_entry* current_node;
-	int weight;
-
-	struct min_heap* left;
-	struct min_heap* right;
-
-} min_heap;
-
-
-/*
-typedef struct linkedlist_entry {
-	struct edge_entry* data;
-	struct linkedlist_entry* next;
-
-} Linkedlist;*/
-
 
 void get_edges(node_table**, int);
 void insert_edge(node_table** nodes, int u, int v, int w);
@@ -102,30 +69,13 @@ int main(int argc, char** args) //int argc, char** args
 		array[i].right = NULL;
 	}
 
-	/*
-		Linkedlist* edges = new Linkedlist;
-		edges->next = NULL;
-		edges->data = NULL;
-		Linkedlist* previous = edges;
-		Linkedlist* temp = previous->next;
-
-		for (int i = 1; i < m; i++)
-		{
-			if (temp == NULL)
-			{
-				temp = new Linkedlist;
-				temp->next = NULL;
-			}
-			temp->data = NULL;
-			previous->next = temp;
-			previous = previous->next;
-			temp = temp->next;
-	}*/
-
 	get_edges(vertices, m);
 	create_array(vertices, array, m, n);
 	print_list(vertices, n);
 	print_array(array,m);
+	build_min_heap(array, m);
+	cout << "Min Heap ?? " << endl;
+	print_array(array, m);
 	get_commands();
 
 	//Stop, write, find
@@ -192,28 +142,20 @@ void insert_edge(node_table** nodes, int u, int v, int w)
 		
 }
 
-void create_array(node_table** nodes, min_heap* array, int m, int n)
+void create_array(node_table** nodes, min_heap* array, int m, int n) // m = edges n = nodes
 {
-	for (int i = 1; i <= m; i++)
+	for (int i = 1, j = 0; i <= n; i++)
 	{
 		node_table* prev_pointer = (nodes[i]);
-		if (prev_pointer->node_position == i)
-		{
-			cout << "True" << endl;
-		}
-		else
-		{
-			cout << "False" << endl;
-		}
 		edge_list* current_pointer = (nodes[i]->edge_list);
 
 		while (current_pointer != NULL)
 		{
-			array[i - 1].previous_node = prev_pointer;
-			array[i - 1].current_node = current_pointer->pointer;
-			array[i - 1].weight = current_pointer->weight;
+			array[j].previous_node = prev_pointer;
+			array[j].current_node = current_pointer->pointer;
+			array[j].weight = current_pointer->weight;
 			
-			i++;
+			j++;
 			current_pointer = current_pointer->next;
 		}
 	}
@@ -315,7 +257,7 @@ void print_array(min_heap* array, int m)
 {
 	for (int i = 0; i < m; i++)
 	{
-		cout << "Node [" << array[i].previous_node->node_position << "] ----- " << array[i].weight << " -----> [" << array[i].current_node->node_position << "]" << endl;
+		cout << "[" << array[i].previous_node->node_position << "] ----- " << array[i].weight << " -----> [" << array[i].current_node->node_position << "]" << endl;
 	}
 }
 

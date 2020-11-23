@@ -1,4 +1,5 @@
 ﻿#include "heap.h"
+#include "main.h"
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -27,14 +28,22 @@ void do_this(int n)
 	or equal to x’s current key value
 */
 
-/*
-void min_heapify(int Arr[], int i, int n)
+
+void build_min_heap(min_heap* edges, int size)
 {
-	int left = 2 * 1;
+	for (int i = floor(size / 2); i >= 0; i--)
+	{
+		min_heapify(edges, i, size);
+	}
+}
+
+void min_heapify(min_heap* edges, int i, int n)
+{
+	int left = 2 * i;
 	int right = 2 * i + 1;
 	int smallest;
 
-	if (left <= n && Arr[left] < Arr[i])
+	if (left < n && edges[left].weight < edges[i].weight)
 	{
 		smallest = left;
 	}
@@ -42,23 +51,23 @@ void min_heapify(int Arr[], int i, int n)
 	{
 		smallest = i;
 	}
-	if (right <= n && Arr[right] < Arr[smallest])
+	if (right < n && edges[right].weight < edges[smallest].weight)
 	{
 		smallest = right;
 	}
 	if (smallest != i)
 	{
-		swap(Arr[i], Arr[smallest]);
-		min_heapify(Arr, smallest, n);
+		swap(edges[i], edges[smallest]);
+		min_heapify(edges, smallest, n);
 	}
 }
 
-
-int minimum(int Arr[])
+int minimum(min_heap* edges)
 {
-	return Arr[1]; // Return the minimum element is the root element in the min heap
+	return edges[0].weight; // Return the minimum element is the root element in the min heap
 }
 
+/*
 int extract_min(int Arr[])
 {
 	int length = sizeof(Arr);
