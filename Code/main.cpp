@@ -43,7 +43,7 @@ typedef struct node_entry {
 typedef struct min_heap {
 	struct node_entry* previous_node;
 	struct node_entry* current_node;
-	int distance;
+	int weight;
 
 	struct min_heap* left;
 	struct min_heap* right;
@@ -61,8 +61,10 @@ typedef struct linkedlist_entry {
 
 void get_edges(node_table**, int);
 void insert_edge(node_table** nodes, int u, int v, int w);
+void create_array(node_table** nodes, min_heap* array, int m, int n);
 void get_commands();
 void print_list(node_table** nodes, int max_edges);
+void print_array(min_heap* array, int m);
 
 
 int main(int argc, char** args) //int argc, char** args
@@ -81,7 +83,7 @@ int main(int argc, char** args) //int argc, char** args
 	int size = n + 1;
 
 	node_table** vertices = new node_table*[size];
-	//min_heap* tree = new min_heap[size];
+	min_heap* array = new min_heap[m];
 	
 
 	for (int i = 0; i <= n; i++) // type mismatch
@@ -91,28 +93,39 @@ int main(int argc, char** args) //int argc, char** args
 		vertices[i]->node_position = 0;
 	}
 
-	/*
-	Linkedlist* edges = new Linkedlist;
-	edges->next = NULL;
-	edges->data = NULL;
-	Linkedlist* previous = edges;
-	Linkedlist* temp = previous->next;
-
-	for (int i = 1; i < m; i++)
+	for (int i = 0; i < m; i++)
 	{
-		if (temp == NULL)
+		array[i].previous_node = NULL;
+		array[i].current_node = NULL;		
+		array[i].weight = 0;
+		array[i].left = NULL;
+		array[i].right = NULL;
+	}
+
+	/*
+		Linkedlist* edges = new Linkedlist;
+		edges->next = NULL;
+		edges->data = NULL;
+		Linkedlist* previous = edges;
+		Linkedlist* temp = previous->next;
+
+		for (int i = 1; i < m; i++)
 		{
-			temp = new Linkedlist;
-			temp->next = NULL;
-		}
-		temp->data = NULL;
-		previous->next = temp;
-		previous = previous->next;
-		temp = temp->next;
+			if (temp == NULL)
+			{
+				temp = new Linkedlist;
+				temp->next = NULL;
+			}
+			temp->data = NULL;
+			previous->next = temp;
+			previous = previous->next;
+			temp = temp->next;
 	}*/
 
 	get_edges(vertices, m);
+	create_array(vertices, array, m, n);
 	print_list(vertices, n);
+	print_array(array,m);
 	get_commands();
 
 	//Stop, write, find
@@ -179,6 +192,33 @@ void insert_edge(node_table** nodes, int u, int v, int w)
 		
 }
 
+void create_array(node_table** nodes, min_heap* array, int m, int n)
+{
+	for (int i = 1; i <= m; i++)
+	{
+		node_table* prev_pointer = (nodes[i]);
+		if (prev_pointer->node_position == i)
+		{
+			cout << "True" << endl;
+		}
+		else
+		{
+			cout << "False" << endl;
+		}
+		edge_list* current_pointer = (nodes[i]->edge_list);
+
+		while (current_pointer != NULL)
+		{
+			array[i - 1].previous_node = prev_pointer;
+			array[i - 1].current_node = current_pointer->pointer;
+			array[i - 1].weight = current_pointer->weight;
+			
+			i++;
+			current_pointer = current_pointer->next;
+		}
+	}
+}
+
 void get_commands()
 {
 	string line, s_str, t_str, flag_str;
@@ -203,24 +243,12 @@ void get_commands()
 		else if (line == "find")
 		{
 			/*
-				find s t flag, where flag is either zero or one.
-				On reading find s t 1, your program runs Dijkstra’s shortest path algorithm to compute the shortest
-				path from s to t, and prints out the length of this shortest path to stdout. The information output
-				format is:
-				LENGTH: l (where l is the shortest path length)
-
-				On reading find s t 0, your program runs Dijkstra’s shortest path algorithm to compute a shortest
-				path from s to t, and prints the actual path (sequence of vertices) to stdout. The information output
-				format is:
-				PATH:s; v1; v2; . . . ; vk;t
-				where the sequence of vertices listed corresponds to the shortest path (s, v1); (v1, v2). . .(vk, t) computed
-				of length k.
+				find s t flag
+				
 				While your program reads in only one graph, it may be asked to compute s-t shortest paths for many
 				different source-destination pairs s and t. Therefore, during the computation of the s-t shortest path, your
 				program must not modify the given graph.
 			*/
-
-			cout << "Find..." << endl;
 
 			cin >> s_str;
 			cin >> t_str;
@@ -232,11 +260,23 @@ void get_commands()
 
 			if (flag == 1)
 			{
-
+				/*	
+					your program runs Dijkstra’s shortest path algorithm to compute the shortest
+					path from s to t, and prints out the length of this shortest path to stdout. The information output
+					format is:
+					LENGTH: l (where l is the shortest path length)
+				*/
 			}
 			else if (flag == 0)
 			{
-
+				/*	
+					your program runs Dijkstra’s shortest path algorithm to compute a shortest
+					path from s to t, and prints the actual path (sequence of vertices) to stdout. The information output
+					format is:
+					PATH:s; v1; v2; . . . ; vk;t
+					where the sequence of vertices listed corresponds to the shortest path (s, v1); (v1, v2). . .(vk, t) computed
+					of length k.
+				*/
 			}
 			else
 			{
@@ -256,7 +296,7 @@ void get_commands()
 
 void print_list(node_table** nodes, int max_edges)
 {
-	for (int i = 1; i <= 25; i++)
+	for (int i = 1; i <= max_edges; i++)
 	{
 		edge_list* temp = (nodes[i]->edge_list);
 
@@ -268,6 +308,14 @@ void print_list(node_table** nodes, int max_edges)
 			}
 			temp = temp->next;
 		}
+	}
+}
+
+void print_array(min_heap* array, int m)
+{
+	for (int i = 0; i < m; i++)
+	{
+		cout << "Node [" << array[i].previous_node->node_position << "] ----- " << array[i].weight << " -----> [" << array[i].current_node->node_position << "]" << endl;
 	}
 }
 
