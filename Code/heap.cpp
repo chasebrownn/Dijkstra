@@ -8,12 +8,6 @@
 using namespace std;
 
 /*
-void do_this(int n)
-{
-	cout << n << endl;
-}*/
-
-/*
 	A priority queue is a data structure for maintaining a set S of elements, each with an associated value called
 	a key. Priority queues come in two forms: Max-priority queues and min-priority queues. Our focus is on a
 	min-priority queue because Dijkstra’s algorithm finds the shortest path to each vertex from a source, i.e., it
@@ -62,41 +56,41 @@ void min_heapify(min_heap* edges, int i, int n)
 	}
 }
 
-int minimum(min_heap* edges)
+min_heap minimum(min_heap* edges)
 {
-	return edges[0].weight; // Return the minimum element is the root element in the min heap
+	return edges[0]; // Return the minimum element is the root element in the min heap
 }
 
-/*
-int extract_min(int Arr[])
+min_heap extract_min(min_heap* edges)
 {
-	int length = sizeof(Arr);
-	int min = Arr[1];
-	Arr[1] = Arr[length];
+	int length = sizeof(edges);
+	min_heap min = edges[1];
+	edges[1] = edges[length];
 	length = length - 1;
-	min_heapify(Arr, 1);
+	min_heapify(edges, 1, length);
 	return min;
 }
 
-void decrease_key(int Arr[], int x, int k)
+
+void decrease_key(min_heap* edges, int x, int k) // Might not be correct due to ".weight" 's
 {
-	if (k > Arr[x])
+	if (k > edges[x].weight)
 	{
 		cout << "New value is greater than current value, can't be inserted" << endl;
 		return;
 	}
-	Arr[x] = k;
-	while (x > 1 && Arr[x/2] > Arr[x])
+	edges[x].weight = k;
+	while (x > 1 && edges[x/2].weight > edges[x].weight)
 	{
-		swap(Arr[x/2], Arr[x]);
+		swap(edges[x/2], edges[x]);
 		x = x / 2;
 	}
 }
 
-void insert(int Arr[], int x)
+void insert(min_heap* edges, int x)
 {
-	int length = sizeof(Arr);
+	int length = sizeof(edges);
 	length = length + 1;
-	Arr[length] = -1;
-	decrease_key(Arr, length, x);
-}*/
+	edges[length].weight = -1;
+	decrease_key(edges, length, x);
+}

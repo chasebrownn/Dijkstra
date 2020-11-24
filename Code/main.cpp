@@ -25,12 +25,11 @@ using namespace std;
 	are indexed from 1 to n (and not from 0 to n − 1).
 */
 
-
-void get_edges(node_table**, int);
-void insert_edge(node_table** nodes, int u, int v, int w);
-void create_array(node_table** nodes, min_heap* array, int m, int n);
+void get_edges(node_entry**, int);
+void insert_edge(node_entry** nodes, int u, int v, int w);
+void create_array(node_entry** nodes, min_heap* array, int m, int n);
 void get_commands();
-void print_list(node_table** nodes, int max_edges);
+void print_list(node_entry** nodes, int max_edges);
 void print_array(min_heap* array, int m);
 
 
@@ -49,13 +48,14 @@ int main(int argc, char** args) //int argc, char** args
 
 	int size = n + 1;
 
-	node_table** vertices = new node_table*[size];
+	//node_table** vertices = new node_table*[size];
+	node_entry** vertices = new node_entry * [size];
+
 	min_heap* array = new min_heap[m];
-	
 
 	for (int i = 0; i <= n; i++) // type mismatch
 	{
-		vertices[i] = new node_table();
+		vertices[i] = new node_entry();
 		vertices[i]->edge_list = NULL;
 		vertices[i]->node_position = 0;
 	}
@@ -71,10 +71,9 @@ int main(int argc, char** args) //int argc, char** args
 
 	get_edges(vertices, m);
 	create_array(vertices, array, m, n);
-	print_list(vertices, n);
+	//print_list(vertices, n);
 	print_array(array,m);
 	build_min_heap(array, m);
-	cout << "Min Heap ?? " << endl;
 	print_array(array, m);
 	get_commands();
 
@@ -84,7 +83,7 @@ int main(int argc, char** args) //int argc, char** args
 	//delete[] edges;
 }
 
-void get_edges(node_table** nodes, int max_edges)
+void get_edges(node_entry** nodes, int max_edges)
 {
 	string u_str, v_str, w_str;
 	int u, v, w;
@@ -107,15 +106,15 @@ void get_edges(node_table** nodes, int max_edges)
 	
 }
 
-void insert_edge(node_table** nodes, int u, int v, int w)
+void insert_edge(node_entry** nodes, int u, int v, int w)
 {
-	node_table* u_pointer = (nodes[u]);
-	node_table* v_pointer = (nodes[v]);
-	edge_list* edge_pointer = u_pointer->edge_list;
+	node_entry* u_pointer = (nodes[u]);
+	node_entry* v_pointer = (nodes[v]);
+	edge_entry* edge_pointer = u_pointer->edge_list;
 
 	if (edge_pointer == NULL)
 	{		
-		edge_list* new_entry = new edge_list();
+		edge_entry* new_entry = new edge_entry();
 
 		u_pointer->node_position = u;				
 		u_pointer->edge_list = new_entry;
@@ -132,7 +131,7 @@ void insert_edge(node_table** nodes, int u, int v, int w)
 			edge_pointer = edge_pointer->next;
 		}
 
-		edge_list* new_entry = new edge_list();
+		edge_entry* new_entry = new edge_entry();
 
 		edge_pointer->next = new_entry;
 		new_entry->pointer = v_pointer;
@@ -142,12 +141,12 @@ void insert_edge(node_table** nodes, int u, int v, int w)
 		
 }
 
-void create_array(node_table** nodes, min_heap* array, int m, int n) // m = edges n = nodes
+void create_array(node_entry** nodes, min_heap* array, int m, int n) // m = edges n = nodes
 {
 	for (int i = 1, j = 0; i <= n; i++)
 	{
-		node_table* prev_pointer = (nodes[i]);
-		edge_list* current_pointer = (nodes[i]->edge_list);
+		node_entry* prev_pointer = (nodes[i]);
+		edge_entry* current_pointer = (nodes[i]->edge_list);
 
 		while (current_pointer != NULL)
 		{
@@ -236,11 +235,11 @@ void get_commands()
 }
 
 
-void print_list(node_table** nodes, int max_edges)
+void print_list(node_entry** nodes, int max_edges)
 {
 	for (int i = 1; i <= max_edges; i++)
 	{
-		edge_list* temp = (nodes[i]->edge_list);
+		edge_entry* temp = (nodes[i]->edge_list);
 
 		while (temp != NULL)
 		{
