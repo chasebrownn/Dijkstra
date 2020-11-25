@@ -14,8 +14,9 @@ struct min_dist {
 
 };
 
-void initialize_single_source(min_dist* vertices, int s, int size);
-void relax(int u, int v, int w);
+int dijkstra(node_entry** adjacency_list, int s, int size);
+void initialize_single_source(node_entry** adjacency_list, min_dist* vertices, int s, int size);
+void relax(node_entry** adjacency_list, min_dist* vertices, int u, int v, int w);
 int get_weight(node_entry** adjacency_list, int u, int v, int w);
 
 class util

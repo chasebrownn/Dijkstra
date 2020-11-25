@@ -64,13 +64,13 @@ min_heap minimum(min_heap* edges)
 min_heap extract_min(min_heap* edges)
 {
 	int length = sizeof(edges);
-	min_heap min = edges[1];
-	edges[1] = edges[length];
+	min_heap min = edges[0];
+	edges[0] = edges[length];
 	length = length - 1;
 	min_heapify(edges, 1, length);
+
 	return min;
 }
-
 
 void decrease_key(min_heap* edges, int x, int k) // Might not be correct due to ".weight" 's
 {

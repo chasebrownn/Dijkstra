@@ -25,32 +25,24 @@ using namespace std;
 	are indexed from 1 to n (and not from 0 to n − 1).
 */
 
-void get_edges(node_entry**, int);
-void insert_edge(node_entry** nodes, int u, int v, int w);
-void create_array(node_entry** nodes, min_heap* array, int m, int n);
-void get_commands();
-void print_list(node_entry** nodes, int max_edges);
-void print_array(min_heap* array, int m);
 
+//TEST 7 FAILED
 
 int main(int argc, char** args) //int argc, char** args
 {
 	string num_of_vertices, num_of_edges;
 	int n, m;
 
-	cin >> num_of_vertices; // Take n number of vertices	
+	cin >> num_of_vertices; // Take n number of vertices
 	n = stoi(num_of_vertices);
 
 	cin >> num_of_edges; // Take m number of edges
 	m = stoi(num_of_edges);
 
-	cout << n << " " << m << endl;
+	//cout << n << " " << m << endl;
 
 	int size = n + 1;
-
-	//node_table** vertices = new node_table*[size];
 	node_entry** vertices = new node_entry * [size];
-
 	min_heap* array = new min_heap[m];
 
 	for (int i = 0; i <= n; i++) // type mismatch
@@ -74,103 +66,19 @@ int main(int argc, char** args) //int argc, char** args
 	//print_list(vertices, n);
 	print_array(array,m);
 	build_min_heap(array, m);
+	//cout << endl;
 	print_array(array, m);
-	get_commands();
-
-	//Stop, write, find
-
-	//delete[] vertices;
-	//delete[] edges;
-}
-
-void get_edges(node_entry** nodes, int max_edges)
-{
-	string u_str, v_str, w_str;
-	int u, v, w;
-
-	for (int i = 0; i < max_edges; i++)
-	{
-		cin >> u_str;
-		cin >> v_str;
-		cin >> w_str;
-		cin.ignore(100, '\n');
-
-		u = stoi(u_str); 
-		v = stoi(v_str); 
-		w = stoi(w_str);
-
-		cout << u << " " << v << " " << w << endl;
-
-		insert_edge(nodes, u, v, w);
-	}
 	
-}
-
-void insert_edge(node_entry** nodes, int u, int v, int w)
-{
-	node_entry* u_pointer = (nodes[u]);
-	node_entry* v_pointer = (nodes[v]);
-	edge_entry* edge_pointer = u_pointer->edge_list;
-
-	if (edge_pointer == NULL)
-	{		
-		edge_entry* new_entry = new edge_entry();
-
-		u_pointer->node_position = u;				
-		u_pointer->edge_list = new_entry;
-		new_entry->pointer = v_pointer;
-		new_entry->weight = w;
-		new_entry->next = NULL;
-
-		return;
-	}
-	else
-	{
-		while (edge_pointer->next != NULL)
-		{
-			edge_pointer = edge_pointer->next;
-		}
-
-		edge_entry* new_entry = new edge_entry();
-
-		edge_pointer->next = new_entry;
-		new_entry->pointer = v_pointer;
-		new_entry->weight = w;
-		new_entry->next = NULL;
-	}
-		
-}
-
-void create_array(node_entry** nodes, min_heap* array, int m, int n) // m = edges n = nodes
-{
-	for (int i = 1, j = 0; i <= n; i++)
-	{
-		node_entry* prev_pointer = (nodes[i]);
-		edge_entry* current_pointer = (nodes[i]->edge_list);
-
-		while (current_pointer != NULL)
-		{
-			array[j].previous_node = prev_pointer;
-			array[j].current_node = current_pointer->pointer;
-			array[j].weight = current_pointer->weight;
-			
-			j++;
-			current_pointer = current_pointer->next;
-		}
-	}
-}
-
-void get_commands()
-{
 	string line, s_str, t_str, flag_str;
 	int s, t, flag;
+
 	cin >> line;
 
 	while (line != "stop")
 	{
 		if (line == "write")
 		{
-			/*  
+			/*
 				On reading write, your program must write the graph to stdout. The output format of the
 				write command is as follows: The first line should contain two integers, n and m, where n is the
 				number of vertices and m is the number of edges in the graph, respectively. This line must be followed
@@ -179,13 +87,22 @@ void get_commands()
 				u : (v1; w1); (v2; w2); . . . ; (vk; wk)
 			*/
 
-			cout << "Write..." << endl;
+			cout << "COMMAND: W" << endl;
+
+			if (n == 0)
+			{
+				cout << "Error: graph not initialized" << endl;
+			}
+			else
+			{
+				print_list(vertices, n);
+			}			
 		}
 		else if (line == "find")
 		{
 			/*
 				find s t flag
-				
+
 				While your program reads in only one graph, it may be asked to compute s-t shortest paths for many
 				different source-destination pairs s and t. Therefore, during the computation of the s-t shortest path, your
 				program must not modify the given graph.
@@ -201,16 +118,41 @@ void get_commands()
 
 			if (flag == 1)
 			{
-				/*	
+				/*
 					your program runs Dijkstra’s shortest path algorithm to compute the shortest
 					path from s to t, and prints out the length of this shortest path to stdout. The information output
 					format is:
 					LENGTH: l (where l is the shortest path length)
 				*/
+
+				cout << "COMMAND: F " << s << " " << t << " " << flag << endl;
+
+				if (n == 0)
+				{
+					cout << "Error: invalid flag value" << endl;
+				}
+				else if (s <= 0 || s > n || t <= 0 || t > n)
+				{
+					cout << "Error: one or more invalid nodes" << endl;
+				}
+				else
+				{					
+					if (s - t == 0)
+					{
+						cout << "LENGTH: 0" << endl;
+					}
+					else
+					{
+						//dijkstra();
+
+						cout << "LENGTH: " << endl;
+
+					}					
+				}				
 			}
 			else if (flag == 0)
 			{
-				/*	
+				/*
 					your program runs Dijkstra’s shortest path algorithm to compute a shortest
 					path from s to t, and prints the actual path (sequence of vertices) to stdout. The information output
 					format is:
@@ -218,10 +160,40 @@ void get_commands()
 					where the sequence of vertices listed corresponds to the shortest path (s, v1); (v1, v2). . .(vk, t) computed
 					of length k.
 				*/
+
+				cout << "COMMAND: F " << s << " " << t << " " << flag << endl;
+
+				if (n == 0)
+				{
+					cout << "Error: graph not initialized" << endl;
+				}
+				else if (s <= 0 || s > n || t <= 0 || t > n)
+				{
+					cout << "Error: one or more invalid nodes" << endl;
+				}
+				else
+				{
+					if (s - t == 0)
+					{
+						cout << "PATH: " << s << endl;
+					}
+					else
+					{
+						//dijkstra();
+
+						cout << "PATH: " << endl;
+
+					}
+				}
 			}
 			else
 			{
-				cout << flag << " is not a valid flag" << endl;
+				cout << "COMMAND: F " << s << " " << t << " " << flag << endl;
+				if (s <= 0 || s > n || t <= 0 || t > n)
+				{
+					cout << "Error: one or more invalid nodes" << endl;
+				}
+				cout << "Error: invalid flag value" << endl;
 			}
 		}
 		else
@@ -231,24 +203,66 @@ void get_commands()
 		cin >> line;
 	}
 
-	return;
+	cout << "COMMAND: S" << endl;
+
+	delete[] vertices;
+	delete[] array;
 }
 
+
+
+/*
+1 : (11, 1); (2, 7); (6, 2); (1, 3)
+2 : (9, 3); (8, 1); (7, 10)
+3 : (1, 5)
+4 : (10, 10); (3, 4)
+5 : (4, 7)
+6 : (11, 3)
+7 : (13, 3); (2, 10); (1, 4)
+8 : (9, 1); (13, 2)
+9 : (9, 4)
+10 : (15, 7); (15, 6); (5, 3)
+11 : (12, 4); (6, 2)
+12 : (8, 2); (18, 8)
+13 : (18, 1)
+14 : (25, 30); (20, 16); (19, 1); (4, 15)
+15 : (14, 2); (10, 8)
+16 : (12, 7)
+17 : (16, 13)
+18 : (12, 7); (22, 3); (21, 1)
+19 : (24, 1)
+20 : (25, 15)
+21 : (22, 1); (16, 4)
+22 : (23, 5); (21, 2)
+23 : (25, 8); (14, 1); (24, 4); (23, 7)
+24 : (25, 26); (13, 9)
+25 : (15, 2)
+*/
 
 void print_list(node_entry** nodes, int max_edges)
 {
 	for (int i = 1; i <= max_edges; i++)
 	{
 		edge_entry* temp = (nodes[i]->edge_list);
+		node_entry* node = (nodes[i]);
+		
+		cout << node->node_position << " : ";
 
 		while (temp != NULL)
 		{
 			if (temp != NULL)
 			{			
-				cout << "Weight of node[" << i << "]'s edge is: " << temp->weight << endl;				
+				//cout << "Weight of node[" << i << "]'s edge is: " << temp->weight << endl;
+				cout << "(" << temp->pointer->node_position << ", " << temp->weight << ")";
 			}
-			temp = temp->next;
+			if (temp->next != NULL)
+			{
+				cout << "; ";
+			}
+			temp = temp->next;			
 		}
+
+		cout << endl;
 	}
 }
 

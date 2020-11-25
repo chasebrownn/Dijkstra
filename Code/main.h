@@ -31,6 +31,8 @@ struct min_heap {
 
 };
 
+void print_list(node_entry** nodes, int max_edges);
+void print_array(min_heap* array, int m);
 
 class main
 {
